@@ -121,10 +121,10 @@ Sommet *ArbreB::rechercher(double etiq)
     q.push(this->racine);
 
     Sommet *sortie = NULL;
-
+    Sommet *temp;
     while (!q.empty())
     {
-        Sommet *temp = q.front();
+        temp = q.front();
         q.pop();
 
         if(temp->getEtiquette() == etiq) sortie = temp;
@@ -215,7 +215,7 @@ ArbreB *ArbreB::fusion(ArbreB *a,ArbreB *b)
     ArbreB *aCopie = new ArbreB(*a);
     ArbreB *bCopie = new ArbreB(*b);
     
-    Sommet *nouvelleRacine = new Sommet(a->getRacine()->getEtiquette() + b->getRacine()->getEtiquette(),' ');
+    Sommet *nouvelleRacine = new Sommet(a->getRacine()->getEtiquette() + b->getRacine()->getEtiquette(),'!');
 
     c->setRacine(nouvelleRacine);
     c->getRacine()->setGauche(aCopie->getRacine());
@@ -250,6 +250,7 @@ void  affiche_sommet(Sommet *s, int niveau)
     {
       cout << "        ";
     }
+    //cout.precision(3);
     cout << s->getEtiquette() <<" "<< s->getEtiquette2()<<endl;
     affiche_sommet(s->getGauche(), niveau + 1);
   }

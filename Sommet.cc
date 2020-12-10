@@ -18,8 +18,8 @@ Sommet::Sommet(double etiq,char etiq2)
 
 Sommet::~Sommet()
 {
-	//if(this)
-	//{	
+	if(this)
+	{	
 		if (this->Gauche)
 		{
 			delete this->Gauche;
@@ -29,7 +29,7 @@ Sommet::~Sommet()
 		{
 			delete this->Droit;
 		}
-	//}
+	}
 }
 
 double Sommet::getEtiquette()
