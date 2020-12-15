@@ -1,8 +1,8 @@
 run: compil
 	./exe
 
-compil: main.o ArbreB.o Sommet.o
-	g++ -Wall main.o ArbreB.o Sommet.o -o exe
+compil: main.o ArbreB.o Sommet.o huffman.o
+	g++ -Wall main.o ArbreB.o Sommet.o huffman.o -o exe
 
 Sommet.o : Sommet.cc Sommet.hh
 	g++ -c Sommet.cc
@@ -10,7 +10,10 @@ Sommet.o : Sommet.cc Sommet.hh
 ArbreB.o : ArbreB.cc ArbreB.hh
 	g++ -c ArbreB.cc
 
-main.o : main.cc ArbreB.hh
+huffman.o : huffman.cc huffman.hh
+	g++ -c huffman.cc
+
+main.o : main.cc ArbreB.hh huffman.hh
 	g++ -c main.cc
 
 zip : 

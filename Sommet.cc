@@ -18,18 +18,25 @@ Sommet::Sommet(double etiq,char etiq2)
 
 Sommet::~Sommet()
 {
-	if(this)
+	/*if(this)
 	{	
 		if (this->Gauche)
 		{
-			delete this->Gauche;
+			this->Gauche->~Sommet();
 		}
 
 		if (this->Droit)
 		{
-			delete this->Droit;
+			this->Droit->~Sommet();
 		}
-	}
+
+		delete this;
+	}*/
+	/*if(Droit)
+		delete Droit;
+
+	if(Gauche)
+		delete Gauche;*/
 }
 
 double Sommet::getEtiquette()
