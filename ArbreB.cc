@@ -363,10 +363,10 @@ void ArbreB::fusion(ArbreB *b,ArbreB *res)
 
 void ArbreB::decomposition(ArbreB *ArbreUn,ArbreB *ArbreDeux)
 {
-    /*ArbreB *temp = new ArbreB(*this);
+    ArbreB *temp = new ArbreB(*this);
 
-    ArbreUn->inserer(ArbreUn,temp->getRacine()->getGauche());
-    ArbreDeux->inserer(&ArbreDeux,temp->getRacine()->getDroit());*/
+    ArbreUn->inserer(temp->getRacine()->getGauche());
+    ArbreDeux->inserer(temp->getRacine()->getDroit());
 }
 
 void ArbreB::affiche()

@@ -7,36 +7,19 @@ using namespace std;
 
 int main()
 {
+   
     huffman H;
-    H.lecture_traitements();
 
-    
-    // STOCKER LES ARBRES (les caractéres ) ET LES INITIALISER >>>> 
-
-    H.initialiser_vecteurs_arbres();
+    H.start();
 
 
-    //  FUSIONNER LES ARBRES POUR FINALEMENT AVOIR UN SEUL ARBRE COMME RÉSULTAT >>>>>>>>>
-
-    H.fusionner_arbres();
-    
-    H.vider();
-    
-
-    H.arbres.at(0)->affiche();  //                  AFFICHAGE DE L'ARBRE
-
-    //           CODAGE DU TEXTE    >>>>>>>>>>>>>>>>>
-    H.genere_code();
-
-    //        CODAGE DU TEXTE   <<<<<<<<<<<<<<<<<<<<<<
+   /* 
+   // TESTES DES FONCTIONS DE LA CLASSE ArbreB (PARTIE 1 DU PROJET)
 
 
 
-
-
-
-
-   // cout << "           arbre a :" << endl << endl;
+   cout << "           arbre a :" << endl << endl; 
+    */
     /*
 
           11
@@ -46,28 +29,28 @@ int main()
       5
     */
 
-   /* ArbreB *a = new ArbreB();
+    /*ArbreB *a = new ArbreB();
     
-    Sommet *s = new Sommet(11);
-    Sommet *s1 = new Sommet(1);
-    Sommet *s2 = new Sommet(2);
-    Sommet *s3 = new Sommet(5);
-    Sommet *s4 = new Sommet(6);
+    Sommet *s = new Sommet(11,(char) 0);
+    Sommet *s1 = new Sommet(1,(char) 0);
+    Sommet *s2 = new Sommet(2,(char) 0);
+    Sommet *s3 = new Sommet(5,(char) 0);
+    Sommet *s4 = new Sommet(6,(char) 0);
 
-    a->inserer(&a,s);
-    a->inserer(&a,s1);
-    a->inserer(&a,s2);
+    a->inserer(s);
+    a->inserer(s1);
+    a->inserer(s2);
     
-    affiche(a);
+    a->affiche();
 
     cout << "           insrer deux sommet dans a :"  << endl << endl;
-    a->inserer(&a,s3);
-    a->inserer(&a,s4);
-    affiche(a);
+    a->inserer(s3);
+    a->inserer(s4);
+    a->affiche();
 
     cout << "           supprimer le sommet dont l'etiqutte = 1 dans l'arbre a:" << endl << endl;
     a->supprimer(1);
-    affiche(a);
+    a->affiche();
 
 
 
@@ -82,23 +65,24 @@ int main()
 
     /*ArbreB *b = new ArbreB();
 
-    Sommet *su = new Sommet(7);   
-    Sommet *su1 = new Sommet(3);
-    Sommet *su2 = new Sommet(4);
+    Sommet *su = new Sommet(7,(char) 0);   
+    Sommet *su1 = new Sommet(3,(char) 0);
+    Sommet *su2 = new Sommet(4,(char) 0);
 
-    b->inserer(&b,su);
-    b->inserer(&b,su1);
-    b->inserer(&b,su2);
+    b->inserer(su);
+    b->inserer(su1);
+    b->inserer(su2);
     
-    affiche(b);
+    b->affiche();
     
     
     // FUSION DE a ET b
     cout << "           arbre c fusion de l'arbre a et l'arbre b :" << endl << endl;
 
-    ArbreB *c = a->fusion(a,b);
+    ArbreB *c = new ArbreB();
+    a->fusion(b,c);
 
-    affiche(c);
+    c->affiche();
 
 
     // DECOMPOSITION DE c
@@ -107,13 +91,13 @@ int main()
     ArbreB *d = new ArbreB();
     ArbreB *e = new ArbreB();
     
-    c->decomposition(&d,&e);
+    c->decomposition(d,e);
 
     cout << "            arbre d :" << endl << endl;
-    affiche(d);
+    d->affiche();
     
     cout << "            arbre e :" << endl << endl;
-    affiche(e);
+    e->affiche();
 
     cout << "            rechercher dans l'arbre c le sommet dont l'etiquette = 3" << endl;
     

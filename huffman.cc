@@ -1,13 +1,17 @@
 #include "huffman.hh"
+#include <sstream>
+#include <string>
 using namespace std;
+
 
 huffman::huffman()
 {
-     for (size_t i = 0; i < 94; i++) // INTIALISER LE TABLEAU ALPHABET 
+    for (size_t i = 0; i < 94; i++) // INTIALISER LE TABLEAU ALPHABET 
     {
         this->alphabet[i] = 0;
     }
     this->nbreCar = 0;
+    this->etat = -1;
 }
 
 bool huffman::code_lettre( char car, Sommet* s , std::vector <int> * V )
@@ -30,14 +34,27 @@ bool huffman::code_lettre( char car, Sommet* s , std::vector <int> * V )
     return false;          
 }
 
-void huffman::lecture_traitements()
+void huffman::lecture_traitements_C()
 {
+    texte.clear();
+    bool B;
      do // LECTURE DU TEXTE                          
     {
+        B= true;
        cout<<"Veuillez entrez le texte SVP \n";
        getline(cin,this->texte);   
 
-    } while (this->texte.size() <= 0);
+        for (int i = 0; i < texte.size() ; i++) // vérification de la validité du texte
+        {
+            if ( 126 < (int)texte.at(i) || (int)texte.at(i) < 32 )
+            {
+                cerr<<"ERREUR : caractere non valide \n\n";
+                B =false;
+                break;
+            }
+        }
+
+    } while (this->texte.size() <= 0 || B == false);
 
     for (size_t i = 0; i < this->texte.size(); i++) // stocker le code ascii de chaque caractére du texte et incrémenter la case correspondante au caractére de 1
     {
@@ -57,6 +74,69 @@ void huffman::lecture_traitements()
         }
     }
     //cout<<endl;
+}
+
+void huffman::lecture_traitements_DE()
+{
+    this->affiche_dico();
+    bool B;
+    texte.clear();
+     do // LECTURE DU TEXTE                          
+    {
+        B = true;
+       cout<<"Veuillez entrez un code valide SVP \n";
+       getline(cin,this->texte);   
+
+        for (size_t i = 0; i < texte.size(); i++)
+        {
+            if ((int)texte.at(i) != 48 && (int)texte.at(i) != 49)
+            {
+                cout<<"ERREUR : code invalide \n\n";
+                B = false; 
+                break;
+            }
+        }
+        
+    } while (this->texte.size() <= 0 || B == false);
+
+    std::vector<int> tmp;
+    string texte_res;
+    B = false;
+
+    for (size_t i = 0; i < texte.size(); i++)
+    {   
+        if(((int)texte.at(i) == 48))
+            tmp.push_back(0);
+        else
+            tmp.push_back(1);
+        
+        B = false;
+
+        for (size_t j = 0; j < dico.size(); j++)
+        {
+            if (dico.at(j).le_code == tmp)
+            {
+               cout<<" carctere : "<<dico.at(j).le_car<<endl;
+               texte_res.push_back(dico.at(j).le_car);
+               B = true;
+               tmp.clear();
+               break;
+            }
+            
+        }
+    }
+
+    if (B == false)
+    {
+        cout<<"ERREUR : le code fournie n'est pas reconnue par l'arbre \n";
+    }
+    else
+    {
+        cout<<"le texte résultat :  "<<texte_res<<endl<<endl;   
+    }
+    
+    
+
 }
 
 void huffman::initialiser_vecteurs_arbres()
@@ -164,12 +244,18 @@ std::vector<ArbreB *> huffman::getArbres() // retourne le vecteur arbres
     return this->arbres;
 }
 
+std::vector<elem2> huffman::getDico ()
+{
+    return this->dico;
+}
+
 void huffman::genere_code()
 {
     std::vector<int> tmp_code;
     char tmp1;
+    elem2 tmp2;
     
-    cout<<"Le code des lettres du texte ( Gauche = 0 et Droite = 1, sens de lecture \nde bas vers le haut -->\nde haut vers le bas <-- ) \n";
+    cout<<"Le code des lettres du texte ( Gauche = 0 et Droite = 1, sens de lecture \nde bas vers le haut <--\nde haut vers le bas --> ) \n";
     for (size_t i = 0; i < 94 ; i++)
     {
         if (this->alphabet[i] != 0)
@@ -179,13 +265,20 @@ void huffman::genere_code()
             code_lettre(i+32,this->arbres.at(0)->getRacine(),&tmp_code);
 
             cout<<tmp1<<"  =  ";
+
+            tmp2.le_car = tmp1;
             
-            for (int elem : tmp_code)
+            for (int i = (int)tmp_code.size()-1; i >= 0; i--)
             {
-                cout<<elem;
+                cout<<tmp_code.at(i);
+                tmp2.le_code.push_back(tmp_code.at(i));
             }
+            
             cout<<endl;
             tmp_code.clear();
+
+            dico.push_back(tmp2);
+            tmp2.le_code.clear();
         }
     }
     cout<<endl;
@@ -196,9 +289,9 @@ void huffman::genere_code()
     {
         code_lettre(texte.at(i),arbres.at(0)->getRacine(),&tmp_code);
 
-        for (int elem : tmp_code)
+        for (int i = (int)tmp_code.size()-1; i >= 0; i--)
         {
-            cout<<elem;
+            cout<<tmp_code.at(i);
         }
         tmp_code.clear();
         
@@ -206,3 +299,81 @@ void huffman::genere_code()
     cout<<endl<<endl;
 }
 
+void huffman::affiche_dico()
+{
+    for ( elem2 element : this->dico)
+    {
+        cout<<"     - "<<element.le_car<<"   code binaire  :  ";
+
+        for (int element2 : element.le_code)
+        {
+            cout<<element2;
+        }
+        cout<<endl<<endl;
+    }   
+
+    
+}
+
+void huffman::start ()
+{
+    cout<<"                        >>PROGRAMME DE CRYPTAGE/DECRYPTAGE DE TEXTE/CODE GRAÇE A L'ALGORITHME DE HUFFMAN<<\n\nLes options : \n\n      -Pour crypter un texte en anglais en code huffman tapez 0\n      -Pour decrypter un code a partir d'un arbre tapez 1\n\n";
+
+    string tmp,tmp2;
+    do
+    {
+    
+        do // LECTURE DU TEXTE                          
+        {
+            cout<<"veuillez entrez votre choix \n";
+            getline(cin,tmp);
+
+
+
+        if ( (int)tmp.at(0) == 48 )
+        {
+            for (size_t i = 0; i < 94; i++) 
+            {
+                this->alphabet[i] = 0;
+            }
+            if (arbres.size() != 0)
+                delete this->arbres.at(0);
+
+            this->arbres.clear();
+            this->dechets.clear();
+            this->dico.clear();
+            this->nbreCar = 0;
+            this->etat = 0;
+            this->lecture_traitements_C();
+            this->initialiser_vecteurs_arbres();
+            this->fusionner_arbres();
+            this->vider();
+            this->getArbres().at(0)->affiche();
+            this->genere_code();
+        }
+        else
+        {
+            if ( (int)tmp.at(0) == 49 )
+            {
+                if (this->etat == -1)
+                    cout<<"ERREUR : il n'existe aucun arbre permettant de décrypter un code huffman\n";
+                else
+                {
+                    this->etat = 1;
+                    this->lecture_traitements_DE();
+                }
+
+            } 
+        }
+
+        } while ( (tmp.size()==0 || tmp.size()>1 ) || tmp.at(0) != '1' && tmp.at(0) != '0' );
+
+        cout<<"\n\nvoulez vous continuer à utiliser le programme O/N ? \n\n";
+        getline(cin,tmp2);
+
+    } while ( tmp.size()==0 || tmp2.compare("Non") != 0 && tmp2.compare("N") != 0 && tmp2.compare("non") != 0 && tmp2.compare("n") != 0);
+    
+    if (arbres.size() != 0)
+        delete this->arbres.at(0);    
+
+}
