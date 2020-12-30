@@ -63,13 +63,13 @@ void huffman::lecture_traitements_C()
     
     this->nbreCar = 0;
 
-    //cout<<" alphabet : "<<endl;
+    
     for (size_t i = 0; i < 94; i++) // convertir le nombre d'ocurrence de chaque caractére en un pourcentage d'occurence par rapport au nombre de caractéres dans le texte 
     {
         if (alphabet[i] != 0)
         {
             this->alphabet[i] = (this->alphabet[i] * 100) / this->texte.size();
-            //cout<<" "<<this->alphabet[i]<<" ";
+            //cout<<"   "<<(char)i+32<<" : "<<this->alphabet[i]<<"   ";
             this->nbreCar++;
         }
     }
@@ -84,7 +84,7 @@ void huffman::lecture_traitements_DE()
      do // LECTURE DU TEXTE                          
     {
         B = true;
-       cout<<"Veuillez entrez un code valide SVP \n";
+       cout<<"Veuillez entrez un code valide SVP \n\n";
        getline(cin,this->texte);   
 
         for (size_t i = 0; i < texte.size(); i++)
@@ -103,6 +103,7 @@ void huffman::lecture_traitements_DE()
     string texte_res;
     B = false;
 
+    cout<<"\nles caractéres identifier :  ";
     for (size_t i = 0; i < texte.size(); i++)
     {   
         if(((int)texte.at(i) == 48))
@@ -116,7 +117,7 @@ void huffman::lecture_traitements_DE()
         {
             if (dico.at(j).le_code == tmp)
             {
-               cout<<" carctere : "<<dico.at(j).le_car<<endl;
+               cout<<" '"<<dico.at(j).le_car<<"'  ";
                texte_res.push_back(dico.at(j).le_car);
                B = true;
                tmp.clear();
@@ -159,25 +160,26 @@ void huffman::initialiser_vecteurs_arbres()
     }
 
      
-    cout<<" l'alphabet : \n";
+    cout<<"\n                        >>ALPHABET<<                        \n";
 
     for ( ArbreB * elem : this->arbres) // afficher l'alphabet 
     {
         cout<<" "<<elem->getRacine()->getEtiquette2()<<" ";
     }
-    cout<<endl;
+    cout<<endl<<endl;
 
 }
 
 void huffman::fusionner_arbres()
 {
-    int min1,min2,co1,co2;
+    int co1,co2;
+    double min1,min2;
     char tmp1;
 
     ArbreB * tmpArbre;
     while (arbres.size()>1)  // Fusionner les arbres du vecteur arbres jusqu'a avoir un seul arbre dans le vecteur qui auront un pourcentage = 100 
     {
-
+       
         if (arbres.at(1)->getRacine()->getEtiquette() < arbres.at(0)->getRacine()->getEtiquette()) // // determiner le minimum en terme de pourcentage d'occurence 
         {
             min1 = arbres.at(1)->getRacine()->getEtiquette(); co1 = 1;
@@ -205,6 +207,7 @@ void huffman::fusionner_arbres()
             
             
         }
+
         this->dechets.push_back(arbres.at(co1)); // stocker arbre qui a était fusionner dans dechets pour etre supprimer
         this->dechets.push_back(arbres.at(co2)); // stocker arbre qui a était fusionner dans dechets pour etre supprimer
 
@@ -255,7 +258,8 @@ void huffman::genere_code()
     char tmp1;
     elem2 tmp2;
     
-    cout<<"Le code des lettres du texte ( Gauche = 0 et Droite = 1, sens de lecture \nde bas vers le haut <--\nde haut vers le bas --> ) \n";
+    cout<<"                        >>CODE DES CARACTÉRES DU TEXTE<<                        \n";
+    cout<<"( Gauche = 0 et Droite = 1, sens de lecture \nde bas vers le haut <--\nde haut vers le bas --> ) \n";
     for (size_t i = 0; i < 94 ; i++)
     {
         if (this->alphabet[i] != 0)
@@ -284,7 +288,7 @@ void huffman::genere_code()
     cout<<endl;
 
 
-    cout<<endl<<"le code du texte (sens de lecture --> ) :      "<<endl;
+    cout<<"\n                        >>CODE TEXTE ( SENS DE LECTURE ----> )<<                        \n";
     for (size_t i = 0; i < texte.size(); i++)
     {
         code_lettre(texte.at(i),arbres.at(0)->getRacine(),&tmp_code);
@@ -348,6 +352,7 @@ void huffman::start ()
             this->initialiser_vecteurs_arbres();
             this->fusionner_arbres();
             this->vider();
+            cout<<"                        >>ARBRE DU CODE<<                        \n\n";
             this->getArbres().at(0)->affiche();
             this->genere_code();
         }
